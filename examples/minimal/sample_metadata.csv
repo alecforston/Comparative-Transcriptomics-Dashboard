@@ -1,0 +1,5 @@
+,condition,batch,sequencing_depth,replicate
+Control_1,control,1,46917,1
+Control_2,control,2,46590,2
+Treatment_1,treatment,1,52533,1
+Treatment_2,treatment,2,67790,2

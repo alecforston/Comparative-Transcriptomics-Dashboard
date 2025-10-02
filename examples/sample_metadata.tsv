@@ -1,0 +1,7 @@
+	condition	batch	sequencing_depth	replicate
+Control_1	control	1	1249073	1
+Control_2	control	2	1191127	2
+Control_3	control	1	1408733	3
+Treatment_1	treatment	2	2643331	1
+Treatment_2	treatment	1	2085991	2
+Treatment_3	treatment	2	1676444	3
