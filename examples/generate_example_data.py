@@ -25,7 +25,7 @@ def generate_example_data(
         fold_change_range: (min, max) fold change for DE genes
         output_dir: Directory to save files
         seed: Random seed for reproducibility
-    """
+    """ 
     np.random.seed(seed)
     
     n_samples = n_control + n_treatment

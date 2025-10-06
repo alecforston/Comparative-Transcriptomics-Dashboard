@@ -6,6 +6,7 @@ from typing import Dict, List, Optional, Tuple, Union
 import pandas as pd
 import numpy as np
 from pydantic import BaseModel, Field, field_validator
+from typing import Dict, List, Optional, Tuple, Union, Any
 
 
 class ValidationError(Exception):
@@ -24,7 +25,7 @@ class ValidationResult(BaseModel):
     valid: bool
     errors: List[str] = Field(default_factory=list)
     warnings: List[ValidationWarning] = Field(default_factory=list)
-    summary: Dict[str, any] = Field(default_factory=dict)
+    summary: Dict[str, Any] = Field(default_factory=dict)
 
 
 class CountMatrixSchema(BaseModel):

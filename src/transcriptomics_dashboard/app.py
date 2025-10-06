@@ -514,12 +514,11 @@ def download_results(n_clicks):
 
 def main():
     """Run the Dash application."""
-    app.run_server(
+    app.run(
         debug=config.debug,
         host=config.host,
         port=config.port
-    )
-
+    )   
 
 if __name__ == '__main__':
     main()

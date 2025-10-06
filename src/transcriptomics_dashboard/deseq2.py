@@ -56,7 +56,7 @@ class DESeq2Wrapper:
                 "Please install them in R using:\n"
                 "  if (!require('BiocManager', quietly = TRUE))\n"
                 "      install.packages('BiocManager')\n"
-                f"  BiocManager::install(c({', '.join(f\"'{p}'\" for p in missing)}))"
+                f"  BiocManager::install(c({', '.join(repr(p) for p in missing)}))"
             )
             raise DESeq2Error(error_msg)
     
@@ -325,35 +325,40 @@ def run_deseq2(
             - vst_counts: VST-transformed counts
             - dds: DESeqDataSet object (for further analysis)
     """
-    wrapper = DESeq2Wrapper()
+    from rpy2.robjects import pandas2ri, default_converter
+    from rpy2.robjects.conversion import localconverter
     
-    # Create design formula
-    design = f"~{condition_col}"
-    
-    # Create DESeqDataSet
-    dds = wrapper.create_deseq_dataset(counts, metadata, design)
-    
-    # Run analysis
-    dds = wrapper.run_deseq(dds, parallel=(n_threads > 1), n_threads=n_threads)
-    
-    # Build contrast specification
-    contrast_spec = None
-    if contrast:
-        contrast_spec = [condition_col, contrast[0], contrast[1]]
-    
-    # Get results
-    results = wrapper.get_results(
-        dds,
-        contrast=contrast_spec,
-        alpha=fdr_threshold,
-        lfc_threshold=lfc_threshold
-    )
-    
-    # Get normalized counts
-    normalized_counts = wrapper.get_normalized_counts(dds)
-    
-    # Get VST counts
-    vst_counts = wrapper.get_vst_counts(dds)
+    # Use context manager for conversion
+    with localconverter(default_converter + pandas2ri.converter):
+        wrapper = DESeq2Wrapper()
+        
+        # Create design formula
+        design = f"~{condition_col}"
+        
+        # Create DESeqDataSet
+        dds = wrapper.create_deseq_dataset(counts, metadata, design)
+        
+        # Run analysis
+        dds = wrapper.run_deseq(dds, parallel=(n_threads > 1), n_threads=n_threads)
+        
+        # Build contrast specification
+        contrast_spec = None
+        if contrast:
+            contrast_spec = [condition_col, contrast[0], contrast[1]]
+        
+        # Get results
+        results = wrapper.get_results(
+            dds,
+            contrast=contrast_spec,
+            alpha=fdr_threshold,
+            lfc_threshold=lfc_threshold
+        )
+        
+        # Get normalized counts
+        normalized_counts = wrapper.get_normalized_counts(dds)
+        
+        # Get VST counts
+        vst_counts = wrapper.get_vst_counts(dds)
     
     return {
         'results': results,
